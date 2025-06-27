@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatBot Soporte Computo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #000000, #ff6600);
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chat-container {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      width: 350px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 10px #ff6600;
+      position: relative;
+    }
+    .chat-header {
+      background-color: #ff6600;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .quick-questions {
+      display: flex;
+      justify-content: space-around;
+      padding: 5px;
+      background-color: #222;
+    }
+    .quick-questions button {
+      background-color: #ff6600;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .chat-input {
+      display: flex;
+      flex-direction: column;
+      background-color: #111;
+    }
+    .chat-input-bar {
+      display: flex;
+      padding: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .chat-input button {
+      background-color: #ff6600;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+    .user, .bot {
+      margin-bottom: 10px;
+    }
+    .user span {
+      color: #ffa500;
+    }
+    .bot span {
+      color: #00ffcc;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Asistente Técnico</div>
+    <div class="chat-messages" id="messages"></div>
+    <div class="chat-input">
+      <div class="quick-questions">
+        <button onclick="quickQuestion('equipo personalizado')">Equipo Personalizado</button>
+        <button onclick="quickQuestion('mantenimiento')">Mantenimiento</button>
+        <button onclick="quickQuestion('suscripción a TECNEC SYNC')">TECNEC SYNC</button>
+      </div>
+      <div class="chat-input-bar">
+        <input type="text" id="userInput" placeholder="Escribe tu mensaje..." onkeydown="handleKey(event)">
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const messages = document.getElementById('messages');
+
+    function appendMessage(sender, text) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add(sender);
+      messageDiv.innerHTML = `<span>${sender === 'user' ? 'Tú' : 'Bot'}:</span> ${text}`;
+      messages.appendChild(messageDiv);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function botResponse(input) {
+      input = input.toLowerCase();
+      if (input.includes("hola")) {
+        return `💬 ¡Hola! Bienvenido(a) a TECNEC ⚙️🖥️<br>
+Somos expertos en venta, ensamble y mantenimiento de equipos de cómputo, pero vamos más allá.<br><br>
+🚀 ¿Buscas un equipo a tu medida?<br>
+🧠 ¿Quieres saber cuándo tu PC necesita mantenimiento antes de que falle?<br>
+📱 Con nuestra app, diagnóstico en tiempo real y servicio a domicilio, todo es posible.<br><br>
+Además, con nuestro sistema de suscripción mensual, tu equipo estará siempre en óptimas condiciones — ¡sin que tengas que preocuparte!<br><br>
+💡 ¿En qué podemos ayudarte hoy?`;
+      } else if (input.includes("mantenimiento")) {
+        return "Ofrecemos servicios de mantenimiento preventivo y correctivo para equipos de cómputo. ¿Deseas agendar una cita?";
+      } else if (input.includes("venta") || input.includes("producto") || input.includes("equipo personalizado")) {
+        return "Contamos con una amplia gama de productos y también ensamblamos equipos personalizados según tus necesidades. ¿Qué características estás buscando?";
+      } else if (input.includes("precio") || input.includes("costo")) {
+        return "Nuestros precios varían según el producto o servicio. ¿Qué estás buscando exactamente?";
+      } else if (input.includes("suscripci") || input.includes("tecnec sync")) {
+        return `💬 ¡Conoce nuestro Plan de Suscripción TECNEC! 🔧📲<br><br>
+Pensado para que nunca más te preocupes por el estado de tu equipo.<br><br>
+🟠 ¿Qué incluye la suscripción mensual?<br>
+✔️ Diagnóstico en tiempo real a través de nuestra app<br>
+✔️ Alertas automáticas cuando tu equipo necesite mantenimiento<br>
+✔️ Mantenimientos predictivos a domicilio<br>
+✔️ Revisión técnica prioritaria<br>
+✔️ Descuentos especiales en repuestos y actualizaciones<br>
+✔️ Soporte técnico preferencial<br><br>
+🟢 ¿Cómo funciona?<br><br>
+Descarga la app TECNEC<br>
+<a href='https://play.google.com/store/apps/details?id=com.tecnec.app' target='_blank' style='display:inline-block; margin-top:5px; color:#00ffcc;'>📲 Descargar en Google Play</a><br><br>
+Registra tu equipo<br><br>
+Nosotros nos encargamos del resto: ¡te avisamos cuándo y dónde necesita mantenimiento!<br><br>
+💰 Todo esto por solo $20.000 COP al mes.<br>
+Tu equipo siempre protegido, sin complicaciones.`;
+      } else {
+        return "Lo siento, ¿puedes reformular tu pregunta o especificar si es sobre mantenimiento, productos o suscripciones?";
+      }
+    }
+
+    function sendMessage() {
+      const inputField = document.getElementById('userInput');
+      const userText = inputField.value.trim();
+      if (userText === '') return;
+
+      appendMessage('user', userText);
+      inputField.value = '';
+
+      setTimeout(() => {
+        const reply = botResponse(userText);
+        appendMessage('bot', reply);
+      }, 500);
+    }
+
+    function handleKey(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function quickQuestion(text) {
+      document.getElementById('userInput').value = text;
+      sendMessage();
+    }
+  </script>
+</body>
+</html>
+
